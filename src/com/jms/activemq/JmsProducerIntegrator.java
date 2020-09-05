@@ -35,8 +35,6 @@ public class JmsProducerIntegrator implements Execution {
 
 		String host = null;
 		String port = null;
-		String user = null;
-		String pwd = null;
 		String queue = null;
 		String content = null;
 		String replytoqueue = "";
@@ -47,23 +45,20 @@ public class JmsProducerIntegrator implements Execution {
                 logger.debug("JMSIngressIntegrator.execute() Method entry");
 
 			// Get Apigee flow variable value
-			host = (String)messageContext.getVariable("host");
-			port = (String)messageContext.getVariable("port");
-			user = (String)messageContext.getVariable("user");
-			pwd = (String)messageContext.getVariable("pwd");
-			queue = (String)messageContext.getVariable("queue");
-			replytoqueue = (String)messageContext.getVariable("replytoqueue");
+			host = (String)messageContext.getVariable("cv.mqconfigs.host");
+			port = (String)messageContext.getVariable("cv.mqconfigs.port");
+			queue = (String)messageContext.getVariable("cv.mqconfigs.queue");
+			replytoqueue = (String)messageContext.getVariable("cv.mqconfigs.replytoqueue");
 			debug += "JMS Integrator\n";
 			debug += "  Host: " + host + " \n";
 			debug += "  Port: " + port + " \n";
-			debug += "  User: " + user + " \n";
 			debug += "  Queue: " + queue + " \n";
 			debug += "  replytoqueue: " + replytoqueue + " \n";
 
 			String failoverBokerURL = "failover:(tcp://" + host + ":" + Integer.parseInt(port) + ")?Randomize=false";
 			ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
-				user,
-				pwd,
+				ActiveMQConnectionFactory.DEFAULT_USER, 
+				ActiveMQConnectionFactory.DEFAULT_PASSWORD, 
 				failoverBokerURL
 			);
 
